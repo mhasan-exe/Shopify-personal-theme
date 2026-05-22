@@ -1,0 +1,191 @@
+{% liquid
+  assign section_id = 'premium-cinematic-' | append: section.id
+%}
+
+<section id="{{ section_id }}" class="premium-cinematic" data-premium-cinematic>
+  <canvas class="premium-cinematic__shader" data-shader aria-hidden="true"></canvas>
+  <canvas class="premium-cinematic__cursor" data-cursor aria-hidden="true"></canvas>
+
+  <div class="premium-cinematic__inner page-width">
+    <p class="premium-cinematic__eyebrow">Luxury digital atelier</p>
+    <h2 class="premium-cinematic__title">Immersive fashion-film storefront components</h2>
+    <p class="premium-cinematic__intro">
+      To build a truly premium, high-converting e-commerce storefront, the magic lies in the details.
+      Top-tier brands do not just list products; they create an immersive, friction-free digital experience.
+    </p>
+
+    <div class="premium-cinematic__grid">
+      {% for block in section.blocks %}
+        <article class="premium-cinematic__card" {{ block.shopify_attributes }}>
+          <h3>{{ block.settings.title }}</h3>
+          <p>{{ block.settings.description }}</p>
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+{% stylesheet %}
+  .premium-cinematic {
+    position: relative;
+    overflow: clip;
+    min-height: 100svh;
+    padding: clamp(4rem, 8vw, 7rem) 0;
+    background: radial-gradient(circle at top, #26332b 0%, #0c110e 46%, #070908 100%);
+    color: #f8f4ed;
+    isolation: isolate;
+  }
+
+  .premium-cinematic__shader,
+  .premium-cinematic__cursor {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
+  }
+
+  .premium-cinematic__cursor { mix-blend-mode: screen; opacity: .8; }
+
+  .premium-cinematic__inner { position: relative; z-index: 2; }
+  .premium-cinematic__eyebrow { letter-spacing: .22em; text-transform: uppercase; opacity: .8; margin-bottom: .7rem; }
+  .premium-cinematic__title { margin: 0; font-size: clamp(2rem, 5vw, 4.4rem); line-height: .95; }
+  .premium-cinematic__intro { max-width: 70ch; opacity: .9; margin-bottom: clamp(2rem,4vw,3.5rem); }
+
+  .premium-cinematic__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.2rem;
+    perspective: 1400px;
+  }
+
+  .premium-cinematic__card {
+    padding: 1.4rem;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.18);
+    background: linear-gradient(150deg, rgba(255,255,255,.18), rgba(255,255,255,.06));
+    backdrop-filter: blur(16px);
+    transform: translate3d(0, 0, 0);
+    transition: transform .55s cubic-bezier(.19,1,.22,1), box-shadow .55s cubic-bezier(.19,1,.22,1);
+    box-shadow: 0 18px 34px rgba(0,0,0,.35);
+  }
+
+  .premium-cinematic__card:hover {
+    transform: translateY(-8px) rotateX(4deg) rotateY(-4deg) scale(1.02);
+    box-shadow: 0 24px 45px rgba(0, 0, 0, .55);
+  }
+{% endstylesheet %}
+
+{% javascript %}
+  (() => {
+    const section = document.currentScript.closest('[data-premium-cinematic]');
+    if (!section) return;
+
+    const shaderCanvas = section.querySelector('[data-shader]');
+    const cursorCanvas = section.querySelector('[data-cursor]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const setupCanvas = (canvas) => {
+      const ctx = canvas.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const resize = () => {
+        const rect = section.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        canvas.style.width = rect.width + 'px';
+        canvas.style.height = rect.height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      };
+      resize();
+      window.addEventListener('resize', resize);
+      return { ctx, resize };
+    };
+
+    const shader = setupCanvas(shaderCanvas);
+    const cursor = setupCanvas(cursorCanvas);
+    const trail = [];
+    let mouse = { x: section.clientWidth * .5, y: section.clientHeight * .4 };
+
+    section.addEventListener('pointermove', (event) => {
+      const rect = section.getBoundingClientRect();
+      mouse = { x: event.clientX - rect.left, y: event.clientY - rect.top };
+      trail.push({ ...mouse, life: 1 });
+      if (trail.length > 40) trail.shift();
+    });
+
+    const render = (time) => {
+      const t = time * 0.00035;
+      const w = section.clientWidth;
+      const h = section.clientHeight;
+
+      const sctx = shader.ctx;
+      sctx.clearRect(0, 0, w, h);
+
+      for (let i = 0; i < 8; i++) {
+        const y = h * ((i + 1) / 9) + Math.sin(t * 7 + i) * 20;
+        sctx.beginPath();
+        for (let x = 0; x <= w; x += 24) {
+          const wave = Math.sin((x * 0.008) + (t * 13) + i) * (12 + i * 1.5);
+          i === 0 ? sctx.moveTo(x, y + wave) : sctx.lineTo(x, y + wave);
+        }
+        sctx.strokeStyle = `hsla(${120 + i * 8}, 42%, 72%, ${0.06 + i * 0.01})`;
+        sctx.lineWidth = 1.2;
+        sctx.stroke();
+      }
+
+      if (!reduceMotion) {
+        const cctx = cursor.ctx;
+        cctx.clearRect(0, 0, w, h);
+        trail.forEach((point, index) => {
+          point.life *= 0.93;
+          const r = (1 - index / trail.length) * 26 * point.life;
+          const glow = cctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, r);
+          glow.addColorStop(0, 'rgba(216,180,118,.3)');
+          glow.addColorStop(1, 'rgba(216,180,118,0)');
+          cctx.fillStyle = glow;
+          cctx.beginPath();
+          cctx.arc(point.x, point.y, Math.max(r, 0), 0, Math.PI * 2);
+          cctx.fill();
+        });
+        for (let i = trail.length - 1; i >= 0; i--) {
+          if (trail[i].life < 0.08) trail.splice(i, 1);
+        }
+      }
+      requestAnimationFrame(render);
+    };
+
+    requestAnimationFrame(render);
+  })();
+{% endjavascript %}
+
+{% schema %}
+{
+  "name": "Premium cinematic",
+  "max_blocks": 12,
+  "blocks": [
+    {
+      "type": "feature",
+      "name": "Feature",
+      "settings": [
+        { "type": "text", "id": "title", "label": "Title" },
+        { "type": "textarea", "id": "description", "label": "Description" }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Premium cinematic",
+      "blocks": [
+        { "type": "feature", "settings": { "title": "Three.js animated luxury fabric mesh", "description": "Flowing textile-inspired mesh motion that adds premium WebGL depth effects to hero scenes." } },
+        { "type": "feature", "settings": { "title": "Cinematic cursor glow trails", "description": "Soft, responsive cursor aura that reinforces luxury interactivity and immersive navigation." } },
+        { "type": "feature", "settings": { "title": "Shader-like animated background", "description": "Atmospheric animated gradients and wave fields for layered cinematic ambience." } },
+        { "type": "feature", "settings": { "title": "Editorial fullscreen sections", "description": "Awwwards-style scroll transitions and narrative-focused fashion-film chapter layouts." } },
+        { "type": "feature", "settings": { "title": "Cinematic product storytelling scenes", "description": "Immersive modules designed for launch campaigns, texture callouts, and chapter-based storytelling." } },
+        { "type": "feature", "settings": { "title": "Ultra-premium hover physics", "description": "Magnetic-like hover lift with subtle 3D tilt, parallax layers, and refined spring timing." } },
+        { "type": "feature", "settings": { "title": "Smooth page-to-page cinematic reveals", "description": "Seamless reveal transitions between templates to keep browsing fluid and emotionally engaging." } }
+      ]
+    }
+  ]
+}
+{% endschema %}
