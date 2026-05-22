@@ -1,0 +1,486 @@
+{% doc %}
+  @prompt
+    Make the theme look premium, luxury, and elite with a high-end feel. Add smooth animations including fade-ins, subtle parallax effects, elegant hover transitions on buttons and product cards, and scroll-triggered animations. Apply clean touch-ups such as refined typography with elegant font pairings, generous whitespace, polished section spacing, subtle gold or dark accent colors, and smooth CSS transitions throughout to give the store a sophisticated luxury brand aesthetic.
+{% enddoc %}
+{% assign ai_gen_id = block.id | replace: '_', '' | downcase %}
+
+{% style %}
+  .ai-luxury-enhancer-{{ ai_gen_id }} {
+    display: block;
+    width: 100%;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} * {
+    transition: all {{ block.settings.transition_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} body,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .shopify-section {
+    letter-spacing: {{ block.settings.letter_spacing }}px;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .button,
+  .ai-luxury-enhancer-{{ ai_gen_id }} button,
+  .ai-luxury-enhancer-{{ ai_gen_id }} [type="submit"],
+  .ai-luxury-enhancer-{{ ai_gen_id }} .btn {
+    position: relative;
+    overflow: hidden;
+    transform: translateZ(0);
+    transition: all {{ block.settings.transition_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .button::before,
+  .ai-luxury-enhancer-{{ ai_gen_id }} button::before,
+  .ai-luxury-enhancer-{{ ai_gen_id }} [type="submit"]::before,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, {{ block.settings.accent_color }}33, transparent);
+    transition: left {{ block.settings.transition_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .button:hover::before,
+  .ai-luxury-enhancer-{{ ai_gen_id }} button:hover::before,
+  .ai-luxury-enhancer-{{ ai_gen_id }} [type="submit"]:hover::before,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .btn:hover::before {
+    left: 100%;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .button:hover,
+  .ai-luxury-enhancer-{{ ai_gen_id }} button:hover,
+  .ai-luxury-enhancer-{{ ai_gen_id }} [type="submit"]:hover,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 {{ block.settings.shadow_depth }}px {{ block.settings.shadow_depth | times: 2 }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-card,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card-wrapper,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-grid-item {
+    position: relative;
+    overflow: hidden;
+    transition: all {{ block.settings.transition_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card:hover,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-card:hover,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card-wrapper:hover,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-grid-item:hover {
+    transform: translateY(-{{ block.settings.card_lift_distance }}px);
+    box-shadow: 0 {{ block.settings.shadow_depth | times: 1.5 }}px {{ block.settings.shadow_depth | times: 3 }}px rgba(0, 0, 0, {{ block.settings.shadow_opacity }});
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card img,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-card img,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card-wrapper img,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-grid-item img {
+    transition: transform {{ block.settings.image_zoom_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card:hover img,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-card:hover img,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .card-wrapper:hover img,
+  .ai-luxury-enhancer-{{ ai_gen_id }} .product-grid-item:hover img {
+    transform: scale({{ block.settings.image_zoom_scale }});
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .shopify-section {
+    padding-top: {{ block.settings.section_spacing }}px;
+    padding-bottom: {{ block.settings.section_spacing }}px;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} h1,
+  .ai-luxury-enhancer-{{ ai_gen_id }} h2,
+  .ai-luxury-enhancer-{{ ai_gen_id }} h3,
+  .ai-luxury-enhancer-{{ ai_gen_id }} h4,
+  .ai-luxury-enhancer-{{ ai_gen_id }} h5,
+  .ai-luxury-enhancer-{{ ai_gen_id }} h6 {
+    letter-spacing: {{ block.settings.heading_letter_spacing }}px;
+    margin-bottom: {{ block.settings.heading_spacing }}px;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} p {
+    line-height: {{ block.settings.paragraph_line_height }};
+    margin-bottom: {{ block.settings.paragraph_spacing }}px;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .ai-fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity {{ block.settings.fade_duration }}ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform {{ block.settings.fade_duration }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .ai-fade-in.ai-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .ai-parallax-wrapper {
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .ai-parallax-element {
+    transition: transform 0.1s linear;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} a:not(.button):not(.btn) {
+    position: relative;
+    transition: color {{ block.settings.transition_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} a:not(.button):not(.btn)::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background-color: {{ block.settings.accent_color }};
+    transition: width {{ block.settings.transition_speed }}ms cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} a:not(.button):not(.btn):hover::after {
+    width: 100%;
+  }
+
+  .ai-luxury-enhancer-{{ ai_gen_id }} .ai-accent-border {
+    border-top: 1px solid {{ block.settings.accent_color }};
+    opacity: {{ block.settings.accent_opacity }};
+  }
+
+  @media screen and (max-width: 749px) {
+    .ai-luxury-enhancer-{{ ai_gen_id }} .shopify-section {
+      padding-top: {{ block.settings.section_spacing | times: 0.6 }}px;
+      padding-bottom: {{ block.settings.section_spacing | times: 0.6 }}px;
+    }
+  }
+{% endstyle %}
+
+<luxury-enhancer-{{ ai_gen_id }} class="ai-luxury-enhancer-{{ ai_gen_id }}" {{ block.shopify_attributes }}>
+  <div class="ai-luxury-content-{{ ai_gen_id }}">
+    {% if block.settings.show_accent_line %}
+      <div class="ai-accent-border"></div>
+    {% endif %}
+  </div>
+</luxury-enhancer-{{ ai_gen_id }}>
+
+<script>
+  (function() {
+    class LuxuryEnhancer{{ ai_gen_id }} extends HTMLElement {
+      constructor() {
+        super();
+        this.fadeElements = [];
+        this.parallaxElements = [];
+        this.observerOptions = {
+          threshold: 0.1,
+          rootMargin: '0px 0px -50px 0px'
+        };
+      }
+
+      connectedCallback() {
+        this.applyStylesToPage();
+        this.initScrollAnimations();
+        this.initParallax();
+        this.observeElements();
+      }
+
+      applyStylesToPage() {
+        const styles = this.querySelector('style');
+        if (styles) {
+          const globalStyles = styles.cloneNode(true);
+          globalStyles.innerHTML = globalStyles.innerHTML.replace(
+            new RegExp('.ai-luxury-enhancer-{{ ai_gen_id }} ', 'g'),
+            ''
+          );
+          document.head.appendChild(globalStyles);
+        }
+      }
+
+      initScrollAnimations() {
+        const sections = document.querySelectorAll('.shopify-section');
+        sections.forEach((section, index) => {
+          if (!section.classList.contains('ai-fade-in')) {
+            section.classList.add('ai-fade-in');
+            section.style.transitionDelay = `${index * {{ block.settings.stagger_delay }}}ms`;
+            this.fadeElements.push(section);
+          }
+        });
+
+        const cards = document.querySelectorAll('.card, .product-card, .card-wrapper, .product-grid-item');
+        cards.forEach((card, index) => {
+          if (!card.classList.contains('ai-fade-in')) {
+            card.classList.add('ai-fade-in');
+            card.style.transitionDelay = `${index * {{ block.settings.stagger_delay }}}ms`;
+            this.fadeElements.push(card);
+          }
+        });
+      }
+
+      initParallax() {
+        const images = document.querySelectorAll('.banner img, .hero img, [class*="image"] img');
+        images.forEach((img) => {
+          const wrapper = img.parentElement;
+          if (!wrapper.classList.contains('ai-parallax-wrapper')) {
+            wrapper.classList.add('ai-parallax-wrapper');
+            img.classList.add('ai-parallax-element');
+            this.parallaxElements.push(img);
+          }
+        });
+
+        if (this.parallaxElements.length > 0) {
+          window.addEventListener('scroll', () => this.handleParallax(), { passive: true });
+        }
+      }
+
+      handleParallax() {
+        const scrolled = window.pageYOffset;
+        this.parallaxElements.forEach((element) => {
+          const rect = element.getBoundingClientRect();
+          const elementTop = rect.top + scrolled;
+          const elementHeight = rect.height;
+          const viewportHeight = window.innerHeight;
+
+          if (rect.top < viewportHeight && rect.bottom > 0) {
+            const scrollProgress = (scrolled + viewportHeight - elementTop) / (viewportHeight + elementHeight);
+            const parallaxOffset = (scrollProgress - 0.5) * {{ block.settings.parallax_intensity }};
+            element.style.transform = `translateY(${parallaxOffset}px) scale(1.1)`;
+          }
+        });
+      }
+
+      observeElements() {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('ai-visible');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, this.observerOptions);
+
+        this.fadeElements.forEach((element) => {
+          observer.observe(element);
+        });
+      }
+    }
+
+    customElements.define('luxury-enhancer-{{ ai_gen_id }}', LuxuryEnhancer{{ ai_gen_id }});
+  })();
+</script>
+
+{% schema %}
+{
+  "name": "Luxury theme enhancer",
+  "tag": null,
+  "settings": [
+    {
+      "type": "header",
+      "content": "Accent color"
+    },
+    {
+      "type": "color",
+      "id": "accent_color",
+      "label": "Accent color",
+      "default": "#D4AF37"
+    },
+    {
+      "type": "range",
+      "id": "accent_opacity",
+      "label": "Accent opacity",
+      "min": 0,
+      "max": 1,
+      "step": 0.1,
+      "default": 0.3
+    },
+    {
+      "type": "checkbox",
+      "id": "show_accent_line",
+      "label": "Show accent line",
+      "default": false
+    },
+    {
+      "type": "header",
+      "content": "Typography"
+    },
+    {
+      "type": "range",
+      "id": "letter_spacing",
+      "label": "Body letter spacing",
+      "min": 0,
+      "max": 3,
+      "step": 0.1,
+      "unit": "px",
+      "default": 0.5
+    },
+    {
+      "type": "range",
+      "id": "heading_letter_spacing",
+      "label": "Heading letter spacing",
+      "min": 0,
+      "max": 5,
+      "step": 0.5,
+      "unit": "px",
+      "default": 1
+    },
+    {
+      "type": "range",
+      "id": "heading_spacing",
+      "label": "Heading bottom spacing",
+      "min": 10,
+      "max": 50,
+      "step": 5,
+      "unit": "px",
+      "default": 25
+    },
+    {
+      "type": "range",
+      "id": "paragraph_line_height",
+      "label": "Paragraph line height",
+      "min": 1,
+      "max": 2,
+      "step": 0.1,
+      "default": 1.8
+    },
+    {
+      "type": "range",
+      "id": "paragraph_spacing",
+      "label": "Paragraph bottom spacing",
+      "min": 10,
+      "max": 40,
+      "step": 5,
+      "unit": "px",
+      "default": 20
+    },
+    {
+      "type": "header",
+      "content": "Spacing"
+    },
+    {
+      "type": "range",
+      "id": "section_spacing",
+      "label": "Section spacing",
+      "min": 40,
+      "max": 120,
+      "step": 10,
+      "unit": "px",
+      "default": 80
+    },
+    {
+      "type": "header",
+      "content": "Button animations"
+    },
+    {
+      "type": "range",
+      "id": "transition_speed",
+      "label": "Transition speed",
+      "min": 200,
+      "max": 800,
+      "step": 50,
+      "unit": "ms",
+      "default": 400
+    },
+    {
+      "type": "range",
+      "id": "shadow_depth",
+      "label": "Shadow depth",
+      "min": 5,
+      "max": 30,
+      "step": 5,
+      "unit": "px",
+      "default": 15
+    },
+    {
+      "type": "range",
+      "id": "shadow_opacity",
+      "label": "Shadow opacity",
+      "min": 0,
+      "max": 0.5,
+      "step": 0.1,
+      "default": 0.2
+    },
+    {
+      "type": "header",
+      "content": "Product card animations"
+    },
+    {
+      "type": "range",
+      "id": "card_lift_distance",
+      "label": "Card lift distance",
+      "min": 2,
+      "max": 15,
+      "step": 1,
+      "unit": "px",
+      "default": 8
+    },
+    {
+      "type": "range",
+      "id": "image_zoom_scale",
+      "label": "Image zoom scale",
+      "min": 1,
+      "max": 1.2,
+      "step": 0.1,
+      "default": 1.1
+    },
+    {
+      "type": "range",
+      "id": "image_zoom_speed",
+      "label": "Image zoom speed",
+      "min": 300,
+      "max": 1000,
+      "step": 50,
+      "unit": "ms",
+      "default": 600
+    },
+    {
+      "type": "header",
+      "content": "Scroll animations"
+    },
+    {
+      "type": "range",
+      "id": "fade_duration",
+      "label": "Fade duration",
+      "min": 400,
+      "max": 1200,
+      "step": 100,
+      "unit": "ms",
+      "default": 800
+    },
+    {
+      "type": "range",
+      "id": "stagger_delay",
+      "label": "Stagger delay",
+      "min": 50,
+      "max": 200,
+      "step": 10,
+      "unit": "ms",
+      "default": 100
+    },
+    {
+      "type": "header",
+      "content": "Parallax effects"
+    },
+    {
+      "type": "range",
+      "id": "parallax_intensity",
+      "label": "Parallax intensity",
+      "min": 10,
+      "max": 100,
+      "step": 10,
+      "unit": "px",
+      "default": 50
+    }
+  ],
+  "presets": [
+    {
+      "name": "Luxury theme enhancer"
+    }
+  ]
+}
+{% endschema %}
